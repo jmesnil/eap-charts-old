@@ -1,0 +1,6 @@
+dependencies:
+- name: common-eap
+  repository: file://../common-eap
+  version: 0.1.0
+digest: sha256:baaa75689c3ee3b9158954ce3b9541928f0e7ff7cbfa26b9c0107c3db6b5d8bc
+generated: "2021-02-15T11:42:35.328422+01:00"

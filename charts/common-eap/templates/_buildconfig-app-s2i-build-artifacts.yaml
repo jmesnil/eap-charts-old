@@ -5,7 +5,53 @@ metadata:
   name: {{ include "common-eap.appBuilderImage" . }}
   labels:
     {{- include "common-eap.labels" . | nindent 4 }}
-spec: {}
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ include "common-eap.appBuilderImage" . }}:latest
+  runPolicy: Serial
+  source:
+    git:
+      ref: {{ quote .Values.build.ref }}
+      uri: {{ required "Git source repository URL is required" .Values.build.uri }}
+    {{- if .Values.build.contextDir }}    
+    contextDir: {{ .Values.build.contextDir }}
+    {{- end }}
+    {{- if .Values.build.images }}
+    images:
+      {{- tpl (toYaml .Values.build.images) . | nindent 6 }}
+    {{- end}}
+    type: Git
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: DockerImage
+      env:
+      - name: GALLEON_PROVISION_DEFAULT_FAT_SERVER
+        value: "true"
+      - name: CUSTOM_INSTALL_DIRECTORIES
+        value: extensions/*
+      {{- if .Values.build.s2i }}
+      {{- if .Values.build.s2i.galleonLayers }}
+      - name: GALLEON_PROVISION_LAYERS
+        value: {{ quote .Values.build.s2i.galleonLayers }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.build.env }}
+      {{- toYaml .Values.build.env | nindent 6 }}
+      {{- end }}
+      incremental: true
+      forcePull: true
+  {{- if .Values.build.resources }}
+  resources:
+    {{- toYaml .Values.build.resources | nindent 4 }}
+  {{- end }}
+  triggers:
+  - imageChange:
+    type: ImageChange
+  - type: ConfigChange
 {{- end -}}
 {{- define "common-eap.buildconfig-app-s2i-build-artifacts" -}}
 {{- include "common-eap.util.merge" (append . "common-eap.buildconfig-app-s2i-build-artifacts.tpl") -}}

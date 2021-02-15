@@ -2,9 +2,7 @@
 {{- define "eap73.buildconfig-app-s2i-build-artifacts" -}}
 spec:
   strategy:
-    type: Source
     sourceStrategy:
       from:
-        kind: DockerImage
         name: {{ include "eap73.eapBuilderImage" . }}
 {{- end -}}

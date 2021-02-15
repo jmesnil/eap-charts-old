@@ -1,9 +1,9 @@
-{{- include "common-eap.buildconfig-app-s2i" (list . "eap73.buildconfig-app-s2i") -}}
-{{- define "eap73.buildconfig-app-s2i" -}}
+{{- include "common-eap.buildconfig-app-s2i" (list . "eap-xp2.buildconfig-app-s2i") -}}
+{{- define "eap-xp2.buildconfig-app-s2i" -}}
 spec:
   source:
     dockerfile: |-
-      FROM {{ include "eap73.eapRuntimeImage" . }}
+      FROM {{ include "eap-xp2.eapRuntimeImage" . }}
       COPY /server $JBOSS_HOME
       USER root
       RUN chown -R jboss:root $JBOSS_HOME && chmod -R ug+rwX $JBOSS_HOME
@@ -12,5 +12,5 @@ spec:
   strategy:
     dockerStrategy:
       from:
-        name: {{ include "eap73.eapRuntimeImage" . }}
+        name: {{ include "eap-xp2.eapRuntimeImage" . }}
 {{- end -}}

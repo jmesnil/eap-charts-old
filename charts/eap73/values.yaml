@@ -4,7 +4,7 @@
 
 build:
   s2i:
-    jdk: "8"
+    jdk: "11"
     jdk8:
       builderImageStream: jboss-eap73-openjdk8-openshift:7.3
       runtimeImageStream: jboss-eap73-openjdk8-runtime-openshift:7.3    
