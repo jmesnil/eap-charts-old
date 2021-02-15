@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-## EAP Image Streams
+### EAP Image Streams
 
 When S2I is used to build EAP applications, the imagestreams for the EAP images must be installed on OpenShift before the Helm chart is installed.
 
@@ -32,8 +32,6 @@ build:
 
 If the Helm Chart is not able to find the imagestreams for both EAP builder and runtime images, the Helm Chart will fail to install.
 
-### EAP 7.3 ImageStreams
-
 To install, the EAP 7.3 imagestreams in the current namespace, you can run the command:
 
 [source,options="nowrap"]
@@ -44,7 +42,9 @@ $ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images
 $ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/eap73-openjdk8-image-stream.json
 ----
 
-## Deploy a JAX-RS application on EAP 7.3 with S2I
+## Examples
+
+### Deploy a JAX-RS application on EAP 7.3 with S2I
 
 The `my-app-s2i.yaml` contains a Helm Chart that will install the https://github.com/jbossas/eap-quickstarts/tree/7.3.x/helloworld-rs[helloword-rs] quickstart on EAP 7.3 with OpenJDK11.
 
@@ -77,8 +77,6 @@ Once the application is deployed, it can be accessed from the route `my-eap-app`
 curl -L  http://$(oc get route my-eap-app -o jsonpath="{.spec.host}")/rest/json
 {"result":"Hello World!"}%
 ----
-
-### Delete the application
 
 The application can be deleted by running the command:
 
