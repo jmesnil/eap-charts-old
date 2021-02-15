@@ -1,15 +1,11 @@
+{{- include "common-eap.imagestream" . -}}
+
 {{- if and .Values.build.enabled (eq .Values.build.mode "s2i") }}
+---
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
   name: {{ include "common-eap.appBuilderImage" . }}
   labels:
 {{- include "common-eap.labels" . | nindent 4 }}
----
 {{ end }}
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  name: {{ include "common-eap.appName" . }}
-  labels:
-{{- include "common-eap.labels" . | nindent 4 }}

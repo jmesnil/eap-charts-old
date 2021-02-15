@@ -1,0 +1,91 @@
+# Deploy EAP applications on OpenShift with Helm Charts
+= [WFLY-10522] Support Eclipse MicroProfile Config
+:toc:               left
+:icons:             font
+:idprefix:
+:idseparator:       -
+:keywords:          openshift,eap,helm
+
+## Prerequisites
+
+## EAP Image Streams
+
+When S2I is used to build EAP applications, the imagestreams for the EAP images must be installed on OpenShift before the Helm chart is installed.
+
+By default, the chart will look in the same namespace where the chart will be installed. This can be override with the configuration `build.s2i.imageNamespace`:
+
+[source,options="nowrap"]
+----
+build:
+  s2i:
+    imageNamespace: another-namespace
+----
+
+You can specify which version of EAP 7.3 images you want to use with the configuration `build.s2i.jdk` which accepts either `"8"` or `"11"`:
+
+[source,options="nowrap"]
+----
+build:
+  s2i:
+    jdk: "11"
+----
+
+If the Helm Chart is not able to find the imagestreams for both EAP builder and runtime images, the Helm Chart will fail to install.
+
+### EAP 7.3 ImageStreams
+
+To install, the EAP 7.3 imagestreams in the current namespace, you can run the command:
+
+[source,options="nowrap"]
+----
+# EAP 7.3 ImageStreams for OpenJDK11
+$ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/eap73-openjdk11-image-stream.json
+# EAP 7.3 ImageStreams for OpenJDK8
+$ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/eap73-openjdk8-image-stream.json
+----
+
+## Deploy a JAX-RS application on EAP 7.3 with S2I
+
+The `my-app-s2i.yaml` contains a Helm Chart that will install the https://github.com/jbossas/eap-quickstarts/tree/7.3.x/helloworld-rs[helloword-rs] quickstart on EAP 7.3 with OpenJDK11.
+
+EAP 7.3 is provisioned with the `jaxrs-server` layer which contains all that is needed to run this quickstart.
+
+[source,options="nowrap"]
+----
+$ helm install my-eap-app -f examples/my-app-s2i.yaml ./charts/eap73
+LAST DEPLOYED: Mon Feb 15 16:39:26 2021
+...
+STATUS: deployed
+REVISION: 1
+----
+
+Let's wait for the application to be built and deployed:
+
+[source,options="nowrap"]
+----
+$ oc get dc/my-eap-app -w
+NAME         REVISION   DESIRED   CURRENT   TRIGGERED BY
+my-eap-app   0          3         0         config,image(my-eap-app:latest)
+...
+my-eap-app   1          3         3         config,image(my-eap-app:latest)
+----
+
+Once the application is deployed, it can be accessed from the route `my-eap-app`:
+
+[source,options="nowrap"]
+----
+curl -L  http://$(oc get route my-eap-app -o jsonpath="{.spec.host}")/rest/json
+{"result":"Hello World!"}%
+----
+
+### Delete the application
+
+The application can be deleted by running the command:
+
+[source,options="nowrap"]
+----
+$ helm delete my-eap-app
+release "my-eap-app" uninstalled
+----
+
+

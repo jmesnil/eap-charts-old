@@ -1,0 +1,36 @@
+{{- define "common-eap.service" -}}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "common-eap.appName" . }}
+  labels:
+  {{- include "common-eap.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+  {{- include "common-eap.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+  sessionAffinity: None
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "common-eap.appName" . }}-ping
+  labels:
+  {{- include "common-eap.labels" . | nindent 4 }}
+  annotations:
+    description: The JGroups ping port for clustering.
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: 'true'
+spec:
+  ports:
+    - name: ping
+      protocol: TCP
+      port: 8888
+  selector:
+  {{- include "common-eap.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+  sessionAffinity: None
+  publishNotReadyAddresses: true
+{{- end -}}

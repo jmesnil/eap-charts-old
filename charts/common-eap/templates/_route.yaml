@@ -1,0 +1,22 @@
+{{- define "common-eap.route" -}}
+{{- if .Values.deploy.route }}
+{{- if .Values.deploy.route.enabled }}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ include "common-eap.appName" . }}
+  labels:
+  {{- include "common-eap.labels" . | nindent 4 }}
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  to:
+    kind: Service
+    name: {{ include "common-eap.appName" . }}
+    weight: 100
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+{{- end }}
+{{- end }}
+{{- end }}
