@@ -1,0 +1,12 @@
+{{- define "common-eap.buildconfig-app-s2i-build-artifacts.tpl" -}}
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: {{ include "common-eap.appBuilderImage" . }}
+  labels:
+    {{- include "common-eap.labels" . | nindent 4 }}
+spec: {}
+{{- end -}}
+{{- define "common-eap.buildconfig-app-s2i-build-artifacts" -}}
+{{- include "common-eap.util.merge" (append . "common-eap.buildconfig-app-s2i-build-artifacts.tpl") -}}
+{{- end -}}

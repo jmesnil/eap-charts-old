@@ -1,11 +1,11 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "wildfly.name" -}}
+{{- define "common-eap.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "wildfly.fullName" -}}
+{{- define "common-eap.fullName" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -15,32 +15,32 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
-wildfly.appBuilderImage corresponds to the imagestram for the application Builder image
+common-eap.appBuilderImage corresponds to the imagestram for the application Builder image
 */}}
-{{- define "wildfly.appBuilderImage" -}}
-{{- include "wildfly.appName" . }}-build-artifacts
+{{- define "common-eap.appBuilderImage" -}}
+{{- include "common-eap.appName" . }}-build-artifacts
 {{- end }}
 
 {{/*
-wildfly.builderImage corresponds to the name of the WildFly Builder Image
+common-eap.builderImage corresponds to the name of the WildFly Builder Image
 */}}
-{{- define "wildfly.builderImage" -}}
+{{- define "common-eap.builderImage" -}}
 quay.io/wildfly/wildfly-centos7
 {{- end }}
 
 {{/*
-wildfly.runtimeImage corresponds to the name of the WildFly Runtime Image
+common-eap.runtimeImage corresponds to the name of the WildFly Runtime Image
 */}}
-{{- define "wildfly.runtimeImage" -}}
+{{- define "common-eap.runtimeImage" -}}
 quay.io/wildfly/wildfly-runtime-centos7
 {{- end }}
 
 {{/*
-If wildfly.version is not defined, use by defaul the Chart's appVersion
+If common-eap.version is not defined, use by defaul the Chart's appVersion
 */}}
-{{- define "wildfly.version" -}}
-{{- if .Values.wildfly -}}
-{{- default .Chart.AppVersion .Values.wildfly.version -}}
+{{- define "common-eap.version" -}}
+{{- if .Values.eap -}}
+{{- default .Chart.AppVersion .Values.eap.version -}}
 {{- else -}}
 {{- .Chart.AppVersion -}}
 {{- end -}}
@@ -51,7 +51,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "wildfly.appName" -}}
+{{- define "common-eap.appName" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -62,16 +62,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "wildfly.chart" -}}
+{{- define "common-eap.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "wildfly.labels" -}}
-helm.sh/chart: {{ include "wildfly.chart" . }}
-{{ include "wildfly.selectorLabels" . }}
+{{- define "common-eap.labels" -}}
+helm.sh/chart: {{ include "common-eap.chart" . }}
+{{ include "common-eap.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -81,7 +81,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "wildfly.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "wildfly.name" . }}
+{{- define "common-eap.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "common-eap.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

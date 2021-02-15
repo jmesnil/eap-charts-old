@@ -1,0 +1,20 @@
+{{- include "common-eap.buildconfig-app-s2i" (list . "eap73.buildconfig-app-s2i") -}}
+{{- define "eap73.buildconfig-app-s2i" -}}
+spec:
+  source:
+    type: Docker
+    dockerfile: |-
+      FROM {{ include "eap73.eapRuntimeImage" . }}
+      COPY /server $JBOSS_HOME
+      USER root
+      RUN chown -R jboss:root $JBOSS_HOME && chmod -R ug+rwX $JBOSS_HOME
+      USER jboss
+      CMD $JBOSS_HOME/bin/openshift-launch.sh
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: {{ include "eap73.eapRuntimeImage" . }}
+      imageOptimizationPolicy: SkipLayers
+    type: Docker
+{{- end -}}
