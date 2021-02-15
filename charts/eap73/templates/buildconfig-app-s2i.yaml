@@ -1,6 +1,12 @@
+{{- if and .Values.build.enabled (eq .Values.build.mode "s2i") }}
 {{- include "common-eap.buildconfig-app-s2i" (list . "eap73.buildconfig-app-s2i") -}}
+{{- end }}
+
 {{- define "eap73.buildconfig-app-s2i" -}}
 spec:
+  output:
+    to:
+      name: {{ include "common-eap.appName" . }}:latest
   source:
     dockerfile: |-
       FROM {{ include "eap73.eapRuntimeImage" . }}
@@ -13,4 +19,5 @@ spec:
     dockerStrategy:
       from:
         name: {{ include "eap73.eapRuntimeImage" . }}
+        namespace: {{ default .Release.Namespace .Values.build.s2i.eapNamespace}}
 {{- end -}}

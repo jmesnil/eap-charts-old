@@ -1,10 +1,17 @@
 build:
-  mode: s2i
-  uri: https://github.com/jmesnil/wildfly-operator-demo-app.git
+  uri: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+  ref: EAP_7.3.0.GA
   s2i:
     galleonLayers: 'jaxrs-server,microprofile-platform'
+  env:
+  - name: ARTIFACT_DIR
+    value: microprofile-config/target
+  - name: MAVEN_ARGS_APPEND
+    value: -am -pl microprofile-config
+  - name: MAVEN_OPTS
+    value: '-XX:MetaspaceSize=96m -XX:MaxMetaspaceSize=256m'
 deploy:
   replicas: 3
   env:
-  - name: GREETINGS
-    value: From OpenShift, Bonjour
+  - name: CONFIG_PROP
+    value: Hello from OpenShift

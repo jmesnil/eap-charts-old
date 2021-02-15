@@ -3,6 +3,8 @@
 # Declare variables to be passed into your templates.
 
 build:
+  enabled: true
+  mode: s2i
   s2i:
     jdk: "11"
     jdk8:

@@ -1,8 +1,0 @@
-{{- include "common-eap.buildconfig-app-s2i-build-artifacts" (list . "eap-xp2.buildconfig-app-s2i-build-artifacts") -}}
-{{- define "eap-xp2.buildconfig-app-s2i-build-artifacts" -}}
-spec:
-  strategy:
-    sourceStrategy:
-      from:
-        name: {{ include "eap-xp2.eapBuilderImage" . }}
-{{- end -}}

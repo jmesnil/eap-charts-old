@@ -1,8 +1,19 @@
+{{- if and .Values.build.enabled (eq .Values.build.mode "s2i") }}
 {{- include "common-eap.buildconfig-app-s2i-build-artifacts" (list . "eap73.buildconfig-app-s2i-build-artifacts") -}}
+{{ end }}
+
 {{- define "eap73.buildconfig-app-s2i-build-artifacts" -}}
 spec:
   strategy:
     sourceStrategy:
       from:
-        name: {{ include "eap73.eapBuilderImage" . }}
+        {{- $builderImageName := include "eap73.eapBuilderImage" . -}}
+        {{- $ns := default .Release.Namespace .Values.build.s2i.eapNamespace -}}
+        {{- if lookup "image.openshift.io/v1" "ImageStreamTag" $ns $builderImageName }}
+        namespace: {{ $ns }}
+        name: {{ $builderImageName }}
+        {{- else -}}
+        {{- $mg := print "ImagestreamTag for " $builderImageName " not found in namespace " $ns -}}
+        {{ fail $mg }}
+        {{- end -}}
 {{- end -}}

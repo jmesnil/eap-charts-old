@@ -27,7 +27,7 @@ spec:
     type: Source
     sourceStrategy:
       from:
-        kind: DockerImage
+        kind: ImageStreamTag
       env:
       - name: GALLEON_PROVISION_DEFAULT_FAT_SERVER
         value: "true"
