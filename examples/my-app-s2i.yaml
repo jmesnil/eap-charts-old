@@ -11,5 +11,6 @@ build:
     value: -am -pl helloworld-rs
   - name: MAVEN_OPTS
     value: '-XX:MetaspaceSize=96m -XX:MaxMetaspaceSize=256m'
+  pullSecret: my-pull-secret
 deploy:
   replicas: 3

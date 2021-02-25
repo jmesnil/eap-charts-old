@@ -10,4 +10,8 @@ spec:
       from:
         kind: DockerImage
         name: {{ include "eap73.eapBuilderImage" . }}
+      {{- if .Values.build.pullSecret }}
+      pullSecret:
+        name: {{ .Values.build.pullSecret }}
+      {{- end }}
 {{- end -}}
