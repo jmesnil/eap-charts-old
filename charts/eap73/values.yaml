@@ -2,6 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+image:
+  tag: latest
 build:
   enabled: true
   mode: s2i
@@ -14,8 +16,13 @@ build:
       builderImageStream: jboss-eap73-openjdk11-openshift:7.3
       runtimeImageStream: jboss-eap73-openjdk11-runtime-openshift:7.3
 deploy:
+  enabled: true
   route:
     enabled: true
+    tls:
+      enabled: true
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
   livenessProbe:
     exec:
       command:
