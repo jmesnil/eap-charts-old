@@ -3,13 +3,11 @@
 {{- end -}}
 
 {{- define "eap73.buildconfig-s2i-build-artifacts" -}}
-metadata:
-  labels:
-    {{- include "eap73.labels" . | nindent 4 }}
+{{ include "eap73.metadata.labels" . }}
 spec:
   strategy:
     sourceStrategy:
       from:
-        kind: ImageStreamTag
+        kind: DockerImage
         name: {{ include "eap73.eapBuilderImage" . }}
 {{- end -}}

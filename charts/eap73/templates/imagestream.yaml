@@ -1,10 +1,8 @@
 {{- if .Values.build.enabled -}}
-{{- include "wildfly-common.imagestream" (list . "eap.imagestream") -}}
-{{- end -}}
+{{- include "wildfly-common.imagestream" (list . "eap73.metadata.labels") }}
 
-{{- define "eap.imagestream" -}}
-metadata:
-  name: {{ include "wildfly-common.appImage" . }}
-  labels:
-    {{- include "eap73.labels" . | nindent 4 }}
+{{- if eq .Values.build.mode "s2i" }}
+---
+{{- include "wildfly-common.imagestream-s2i-build-artifacts" (list . "eap73.metadata.labels") }}
+{{- end -}}
 {{- end -}}

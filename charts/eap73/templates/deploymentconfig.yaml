@@ -1,0 +1,10 @@
+{{- if .Values.deploy.enabled }}
+{{- include "wildfly-common.deploymentconfig" (list . "eap73.deploymentconfig") -}}
+{{- end -}}
+
+{{ define "eap73.deploymentconfig" }}
+{{- include "eap73.metadata.labels" . }}
+spec:
+  template:
+    {{- include "eap73.metadata.labels" . | nindent 4 }}
+{{- end -}}

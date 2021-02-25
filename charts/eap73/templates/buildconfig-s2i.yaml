@@ -3,9 +3,7 @@
 {{- end -}}
 
 {{- define "eap73.buildconfig-s2i" -}}
-metadata:
-  labels:
-    {{- include "eap73.labels" . | nindent 4 }}
+{{ include "eap73.metadata.labels" . }}
 spec:
   source:
     dockerfile: |-
@@ -18,6 +16,6 @@ spec:
   strategy:
     dockerStrategy:
       from:
-        kind: ImageStreamTag
+        kind: DockerImage
         name: {{ include "eap73.eapRuntimeImage" .}}
 {{- end -}}

@@ -5,9 +5,9 @@ It depends on the build.s2i.jdkVersion.
 */}}
 {{- define "eap73.eapBuilderImage" -}}
 {{- if eq .Values.build.s2i.jdk "8"  -}}
-{{ .Values.build.s2i.jdk8.builderImageStream}}
+{{ .Values.build.s2i.jdk8.builderImage}}:latest
 {{- else -}}
-{{ .Values.build.s2i.jdk11.builderImageStream}}
+{{ .Values.build.s2i.jdk11.builderImage}}:latest
 {{- end -}}
 {{- end -}}
 
@@ -17,9 +17,9 @@ It depends on the build.s2i.jdkVersion.
 */}}
 {{- define "eap73.eapRuntimeImage" -}}
 {{- if eq .Values.build.s2i.jdk "8"  -}}
-{{ .Values.build.s2i.jdk8.runtimeImageStream}}
+{{ .Values.build.s2i.jdk8.runtimeImage}}:latest
 {{- else -}}
-{{ .Values.build.s2i.jdk11.runtimeImageStream}}
+{{ .Values.build.s2i.jdk11.runtimeImage}}:latest
 {{- end -}}
 {{- end -}}
 
@@ -37,3 +37,9 @@ app.kubernetes.io/version: {{ quote .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.openshift.io/runtime: eap
 {{- end }}
+
+{{- define "eap73.metadata.labels" -}}
+metadata:
+  labels:
+  {{- include "eap73.labels" . | nindent 4 }}
+{{- end -}}
