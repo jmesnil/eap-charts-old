@@ -8,7 +8,7 @@ appVersion: "7.3"
 
 dependencies:
 - name: wildfly-common
-  version: 0.1.0
-  #repository: https://jmesnil.github.io/wildfly-charts/
+  version: 0.1.1
+  repository: https://jmesnil.github.io/wildfly-charts/
   # for local development
-  repository: file://../../../wildfly-charts/charts/wildfly-common
+  #repository: file://../../../wildfly-charts/charts/wildfly-common
