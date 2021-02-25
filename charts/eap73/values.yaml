@@ -17,6 +17,7 @@ build:
       runtimeImageStream: jboss-eap73-openjdk11-runtime-openshift:7.3
 deploy:
   enabled: true
+  replicas: 1
   route:
     enabled: true
     tls:

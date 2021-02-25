@@ -1,0 +1,23 @@
+{{- if and .Values.build.enabled (eq .Values.build.mode "s2i") }}
+{{- include "wildfly-common.buildconfig-s2i" (list . "eap73.buildconfig-s2i") -}}
+{{- end -}}
+
+{{- define "eap73.buildconfig-s2i" -}}
+metadata:
+  labels:
+    {{- include "eap73.labels" . | nindent 4 }}
+spec:
+  source:
+    dockerfile: |-
+      FROM {{ include "eap73.eapRuntimeImage" . }}
+      COPY /server $JBOSS_HOME
+      USER root
+      RUN chown -R jboss:root $JBOSS_HOME && chmod -R ug+rwX $JBOSS_HOME
+      USER jboss
+      CMD $JBOSS_HOME/bin/openshift-launch.sh
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: {{ include "eap73.eapRuntimeImage" .}}
+{{- end -}}

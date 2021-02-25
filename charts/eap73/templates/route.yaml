@@ -4,10 +4,6 @@
 
 {{- define "eap73.route" -}}
 metadata:
-  name: {{ include "eap73.appName" . }}
   labels:
   {{- include "eap73.labels" . | nindent 4 }}
-spec:
-  to:
-    name: {{ include "eap73.appName" . }}
 {{- end -}}

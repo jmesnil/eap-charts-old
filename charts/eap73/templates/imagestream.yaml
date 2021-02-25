@@ -4,7 +4,7 @@
 
 {{- define "eap.imagestream" -}}
 metadata:
-  name: {{ include "eap73.appImage" . }}
+  name: {{ include "wildfly-common.appImage" . }}
   labels:
     {{- include "eap73.labels" . | nindent 4 }}
 {{- end -}}
