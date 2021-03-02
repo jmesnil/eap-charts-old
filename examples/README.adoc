@@ -1,5 +1,4 @@
 # Deploy EAP applications on OpenShift with Helm Charts
-= [WFLY-10522] Support Eclipse MicroProfile Config
 :toc:               left
 :icons:             font
 :idprefix:
@@ -8,18 +7,20 @@
 
 ## Prerequisites
 
-### EAP Image Streams
+### EAP S2I Images
 
-When S2I is used to build EAP applications, the imagestreams for the EAP images must be installed on OpenShift before the Helm chart is installed.
+When S2I is used to build EAP applications, the EAP images must be pulled from Red Hat Container Registry and a pull secret must be create to connect to this registry.
 
-By default, the chart will look in the same namespace where the chart will be installed. This can be override with the configuration `build.s2i.imageNamespace`:
+You will need to create a pull secret if you pull the EAP S2I builder image. Use the following command as a reference to create your pull secret:
+```bash
+oc create secret docker-registry eap-pull-secret --docker-server=registry.redhat.io --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=$EMAIL
+```
 
-[source,options="nowrap"]
-----
-build:
-  s2i:
-    imageNamespace: another-namespace
-----
+This `eap-pull-secret` is passed to OpenShift using the `build.s2i.pullSecret` configuration in the example.
+
+## Build and Deploy the Application
+
+### JDK Version
 
 You can specify which version of EAP 7.3 images you want to use with the configuration `build.s2i.jdk` which accepts either `"8"` or `"11"`:
 
@@ -30,20 +31,6 @@ build:
     jdk: "11"
 ----
 
-If the Helm Chart is not able to find the imagestreams for both EAP builder and runtime images, the Helm Chart will fail to install.
-
-To install, the EAP 7.3 imagestreams in the current namespace, you can run the command:
-
-[source,options="nowrap"]
-----
-# EAP 7.3 ImageStreams for OpenJDK11
-$ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/eap73-openjdk11-image-stream.json
-# EAP 7.3 ImageStreams for OpenJDK8
-$ oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-eap-7-openshift-image/eap73/templates/eap73-openjdk8-image-stream.json
-----
-
-## Examples
-
 ### Deploy a JAX-RS application on EAP 7.3 with S2I
 
 The `my-app-s2i.yaml` contains a Helm Chart that will install the https://github.com/jbossas/eap-quickstarts/tree/7.3.x/helloworld-rs[helloword-rs] quickstart on EAP 7.3 with OpenJDK11.
@@ -52,7 +39,7 @@ EAP 7.3 is provisioned with the `jaxrs-server` layer which contains all that is 
 
 [source,options="nowrap"]
 ----
-$ helm install my-eap-app -f examples/my-app-s2i.yaml ./charts/eap73
+$ helm install my-eap73-app -f examples/my-app-s2i.yaml ./charts/eap73
 LAST DEPLOYED: Mon Feb 15 16:39:26 2021
 ...
 STATUS: deployed
@@ -63,18 +50,18 @@ Let's wait for the application to be built and deployed:
 
 [source,options="nowrap"]
 ----
-$ oc get dc/my-eap-app -w
+$ oc get dc/my-eap73-app -w
 NAME         REVISION   DESIRED   CURRENT   TRIGGERED BY
-my-eap-app   0          3         0         config,image(my-eap-app:latest)
+my-eap73-app   0          3         0         config,image(my-eap73-app:latest)
 ...
-my-eap-app   1          3         3         config,image(my-eap-app:latest)
+my-eap73-app   1          3         3         config,image(my-eap73-app:latest)
 ----
 
-Once the application is deployed, it can be accessed from the route `my-eap-app`:
+Once the application is deployed, it can be accessed from the route `my-eap73-app`:
 
 [source,options="nowrap"]
 ----
-curl -L  http://$(oc get route my-eap-app -o jsonpath="{.spec.host}")/rest/json
+curl -L  http://$(oc get route my-eap73-app -o jsonpath="{.spec.host}")/rest/json
 {"result":"Hello World!"}%
 ----
 
@@ -82,8 +69,8 @@ The application can be deleted by running the command:
 
 [source,options="nowrap"]
 ----
-$ helm delete my-eap-app
-release "my-eap-app" uninstalled
+$ helm delete my-eap73-app
+release "my-eap73-app" uninstalled
 ----
 
 

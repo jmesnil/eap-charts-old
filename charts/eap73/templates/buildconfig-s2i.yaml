@@ -18,8 +18,4 @@ spec:
       from:
         kind: DockerImage
         name: {{ include "eap73.eapRuntimeImage" .}}
-      {{- if .Values.build.pullSecret }}
-      pullSecret:
-        name: {{ .Values.build.pullSecret }}
-      {{- end }}
 {{- end -}}

@@ -15,6 +15,7 @@ build:
     jdk11:
       builderImage: registry.redhat.io/jboss-eap-7/eap73-openjdk11-openshift-rhel8
       runtimeImage: registry.redhat.io/jboss-eap-7/eap73-openjdk11-runtime-openshift-rhel8
+  triggers: {}
 deploy:
   enabled: true
   replicas: 1

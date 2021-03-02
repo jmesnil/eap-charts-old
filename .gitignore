@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+#OS X stuff
+.DS_Store
+
+# Ignore generated Chart files
+Chart.lock
+charts/*/charts
